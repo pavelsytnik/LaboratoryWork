@@ -6,7 +6,7 @@ public class RobotMap {
     private final int tile = 16;
     private final int scale = 3;
     private final int tileSize = tile * scale;
-    private final int countTileInRow = 12;
+    private final int countTileInRow = 16;
     private final int countTileInCol = 16;
     private final int width = tileSize * countTileInCol;
 

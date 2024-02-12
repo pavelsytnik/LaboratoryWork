@@ -1,53 +1,63 @@
 package org.example.robot;
 
-import org.example.utils.MyKeyListener;
-
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-public class MyRobot extends RobotMap{
-
-    private Rectangle rectangle;
-    private String direction;
+public class MyRobot extends RobotMap {
+    private Position position;
+    BufferedImage image;
+    public  String direction = "null" ;
     public int xPosition;
     public int yPosition;
     private int speedRobot;
     public boolean collision = false;
+
     public MyRobot() {
-        xPosition = this.getCountTileInCol() / 2 * this.getTileSize();
-        yPosition = this.getCountTileInRow() / 2 * this.getTileSize();
+        xPosition = 7 * this.getTileSize();
+        yPosition = 10 * this.getTileSize();
         speedRobot = this.getTileSize();
+
     }
 
     public String moveLeft() {
         direction = "left";
-        return  direction;
+        return direction;
     }
 
     public String moveRight() {
         direction = "right";
-        return  direction;
+        return direction;
     }
 
     public String moveUp() {
         direction = "up";
-        return  direction;
+        return direction;
     }
 
     public String moveDown() {
         direction = "down";
-        return  direction;
-    }
-    public String moveWait() {
-        direction = "null";
-        return  direction;
+        return direction;
     }
 
-    public void draw(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(xPosition, yPosition, this.getTileSize(), this.getTileSize());
+    public String moveWait() {
+        direction = "null";
+        return direction;
     }
-    public Rectangle getRectangle() {
-        return rectangle;
+
+    public void drawImage() {
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream("/char/robot.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void draw(Graphics2D g) throws IOException {
+        drawImage();
+        g.setColor(Color.BLACK);
+        g.drawImage(image,xPosition, yPosition, this.getTileSize(), this.getTileSize(),null);
     }
 
     public int getxPosition() {
@@ -64,5 +74,17 @@ public class MyRobot extends RobotMap{
 
     public String getDirection() {
         return direction;
+    }
+
+    public void setxPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public void setyPosition(int yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

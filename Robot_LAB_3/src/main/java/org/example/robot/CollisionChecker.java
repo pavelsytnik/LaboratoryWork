@@ -2,7 +2,7 @@ package org.example.robot;
 
 public class CollisionChecker {
 
-    public boolean isFreeDirection(MyRobot myRobot,RobotMap robotMap,TileManager tileManager,String direction) {
+    public boolean isFreeDirection(MyRobot myRobot, RobotMap robotMap, TileManager tileManager, String direction) {
         int tileSize = robotMap.getTileSize();
         int[][] map = tileManager.getMap();
         int col = myRobot.getxPosition() / tileSize;
@@ -37,4 +37,3 @@ public class CollisionChecker {
         return !tileManager.getTiles()[map[nextCol][nextRow]].collision;
     }
 }
-
