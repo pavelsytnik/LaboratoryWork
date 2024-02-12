@@ -1,2 +1,1 @@
-![image](https://github.com/pavelsytnik/LaboratoryWork/assets/109156460/df76822d-79f7-4a68-9cb6-6458c5a1bf40)
-
+![image](https://github.com/pavelsytnik/LaboratoryWork/assets/109156460/f2aa4916-e952-44e5-8e2b-c5431071f843)
