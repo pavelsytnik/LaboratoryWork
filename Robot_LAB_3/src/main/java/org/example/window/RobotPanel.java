@@ -6,7 +6,6 @@ import org.example.utils.MyKeyListener;
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.concurrent.*;
 
@@ -18,17 +17,17 @@ public class RobotPanel extends JPanel implements Runnable {
     private RobotLogic robotLogic;
     private MyKeyListener myKeyListener;
     private volatile Thread robotThread;
-    private final int TARGET_FPS = 1; // Целевое количество кадров в секунду
-    private final long FRAME_INTERVAL = 1000 / TARGET_FPS; // Интервал в миллисекундах между кадрами
+    private final int TARGET_FPS = 10;
+    private final long FRAME_INTERVAL = 1000 / TARGET_FPS;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public RobotPanel() {
-        this.myRobot = new MyRobot();
+        this.myRobot = new MyRobot(10,11);
         this.robotMap = new RobotMap();
         this.collisionChecker = new CollisionChecker();
         this.tileManager = new TileManager();
         this.myKeyListener = new MyKeyListener();
-        robotLogic = new RobotLogic( myRobot, robotMap,myKeyListener, collisionChecker, tileManager);
+        robotLogic = new RobotLogic( myRobot, robotMap,myKeyListener, collisionChecker, tileManager,this);
         initRobotPanel();
     }
 
@@ -69,17 +68,20 @@ public class RobotPanel extends JPanel implements Runnable {
         try {
             scheduler.scheduleAtFixedRate(this::updateAndRepaint, 0, FRAME_INTERVAL, TimeUnit.MILLISECONDS);
             while (!Thread.currentThread().isInterrupted()) {
-                Thread.sleep(100); // Пауза между проверками завершения потока
+                Thread.sleep(100);
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Восстановление флага прерывания
+            Thread.currentThread().interrupt();
         }
     }
 
     private void updateAndRepaint() {
-        SwingUtilities.invokeLater(() -> {
-            update();
-            repaint();
-        });
+        update();
+        repaint();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

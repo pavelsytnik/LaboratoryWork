@@ -10,9 +10,8 @@ import java.io.InputStreamReader;
 public class TileManager extends RobotMap {
     private Tile[] tiles;
     private int[][] map;
-
     public TileManager() {
-        tiles = new Tile[4]; // Adjust size based on the number of tiles
+        tiles = new Tile[3];
         initTiles();
         loadAndInitMap();
     }
@@ -29,8 +28,6 @@ public class TileManager extends RobotMap {
             tiles[2] = new Tile();
             tiles[2].bufferedImage = ImageIO.read(getClass().getResourceAsStream("/utils/flag.png"));
 
-            tiles[3] = new Tile();
-            tiles[3].bufferedImage = ImageIO.read(getClass().getResourceAsStream("/tile/white.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -67,7 +64,19 @@ public class TileManager extends RobotMap {
         }
 
     }
-
+    public  int[] findCoordinateOfValue(int[][] matrix, int target) {
+        int[] coordinates = new int[2];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j] == target) {
+                    coordinates[0] = i;
+                    coordinates[1] = j;
+                    return coordinates;
+                }
+            }
+        }
+        return null;
+    }
     public int[][] getMap() {
         return map;
     }

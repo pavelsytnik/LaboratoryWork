@@ -7,8 +7,6 @@ public class CollisionChecker {
         int[][] map = tileManager.getMap();
         int col = myRobot.getxPosition() / tileSize;
         int row = myRobot.getyPosition() / tileSize;
-
-        // Determine the next position based on the direction
         int nextCol = col;
         int nextRow = row;
         switch (direction) {
@@ -25,15 +23,11 @@ public class CollisionChecker {
                 nextRow++;
                 break;
             default:
-                return true; // No direction specified, so movement is allowed
+                return true;
         }
-
-        // Check if the next position is within bounds
         if (nextCol < 0 || nextCol >= robotMap.getCountTileInCol() || nextRow < 0 || nextRow >= robotMap.getCountTileInRow()) {
-            return false; // Next position is out of bounds
+            return false;
         }
-
-        // Check if the next position is free (not a wall)
         return !tileManager.getTiles()[map[nextCol][nextRow]].collision;
     }
 }

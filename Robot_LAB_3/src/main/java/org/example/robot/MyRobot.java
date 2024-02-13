@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class MyRobot extends RobotMap {
-    private Position position;
     BufferedImage image;
     public  String direction = "null" ;
     public int xPosition;
@@ -14,11 +13,10 @@ public class MyRobot extends RobotMap {
     private int speedRobot;
     public boolean collision = false;
 
-    public MyRobot() {
-        xPosition = 7 * this.getTileSize();
-        yPosition = 10 * this.getTileSize();
+    public MyRobot(int start,int finish) {
+        xPosition = start * this.getTileSize();
+        yPosition = finish * this.getTileSize();
         speedRobot = this.getTileSize();
-
     }
 
     public String moveLeft() {
@@ -72,9 +70,6 @@ public class MyRobot extends RobotMap {
         return speedRobot;
     }
 
-    public String getDirection() {
-        return direction;
-    }
 
     public void setxPosition(int xPosition) {
         this.xPosition = xPosition;
@@ -84,7 +79,4 @@ public class MyRobot extends RobotMap {
         this.yPosition = yPosition;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
 }
