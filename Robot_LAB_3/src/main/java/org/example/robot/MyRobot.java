@@ -5,20 +5,29 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Класс MyRobot представляет робота на карте.
+ * Унаследован от класса RobotMap для доступа к параметрам карты.
+ */
 public class MyRobot extends RobotMap {
-    BufferedImage image;
-    public  String direction = "null" ;
-    public int xPosition;
-    public int yPosition;
-    private int speedRobot;
-    public boolean collision = false;
+    private BufferedImage image; // Изображение робота
+    public String direction = "null"; // Текущее направление движения робота
+    private int xPosition; // Позиция робота по оси X
+    private int yPosition; // Позиция робота по оси Y
+    private int speedRobot = this.getTileSize(); // Скорость перемещения робота
+    public boolean collision = false; // Флаг, указывающий на столкновение робота с препятствием
 
-    public MyRobot(int start,int finish) {
-        xPosition = start * this.getTileSize();
-        yPosition = finish * this.getTileSize();
-        speedRobot = this.getTileSize();
+    /**
+     * Конструктор класса MyRobot.
+     */
+    public MyRobot() {
+        // Конструктор без параметров
     }
 
+    /**
+     * Методы moveLeft, moveRight, moveUp, moveDown и moveWait
+     * определяют направление движения робота.
+     */
     public String moveLeft() {
         direction = "left";
         return direction;
@@ -44,6 +53,9 @@ public class MyRobot extends RobotMap {
         return direction;
     }
 
+    /**
+     * Метод drawImage загружает изображение робота из файла.
+     */
     public void drawImage() {
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/char/robot.png"));
@@ -52,11 +64,16 @@ public class MyRobot extends RobotMap {
         }
     }
 
+    /**
+     * Метод draw отрисовывает робота на графическом контексте g.
+     */
     public void draw(Graphics2D g) throws IOException {
-        drawImage();
+        drawImage(); // Загрузка изображения робота
         g.setColor(Color.BLACK);
-        g.drawImage(image,xPosition, yPosition, this.getTileSize(), this.getTileSize(),null);
+        g.drawImage(image, xPosition, yPosition, this.getTileSize(), this.getTileSize(), null); // Отрисовка робота
     }
+
+    // Геттеры и сеттеры для доступа к полям класса
 
     public int getxPosition() {
         return xPosition;
@@ -70,7 +87,6 @@ public class MyRobot extends RobotMap {
         return speedRobot;
     }
 
-
     public void setxPosition(int xPosition) {
         this.xPosition = xPosition;
     }
@@ -78,5 +94,4 @@ public class MyRobot extends RobotMap {
     public void setyPosition(int yPosition) {
         this.yPosition = yPosition;
     }
-
 }
