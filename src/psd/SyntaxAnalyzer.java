@@ -38,13 +38,14 @@ public class SyntaxAnalyzer {
         var root = new StartNode();
         Node currentNode = root;
 
-        for (int i = 1; i < tokens.size() - 1; i++) {
+        for (int i = 1; i < tokens.size(); i++) {
             var currentToken = tokens.get(i);
             Node nextNode;
             switch (currentToken.getType()) {
                 case ">", "#", "W" -> nextNode = findLabel(labels, currentToken.getIndex());
                 case "X" -> nextNode = new ConditionNode(Integer.parseInt(currentToken.getIndex()));
                 case "Y" -> nextNode = new CommandNode(Integer.parseInt(currentToken.getIndex()));
+                case "E" -> nextNode = new EndNode();
                 default -> throw new RuntimeException("Syntax Error: Unknown token");
             }
             if (currentNode != null) {
