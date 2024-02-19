@@ -16,38 +16,51 @@ public class CollisionChecker {
      * @return true, если выбранное направление свободно для передвижения робота, иначе - false.
      */
     public boolean isFreeDirection(MyRobot myRobot, RobotMap robotMap, TileManager tileManager, String direction) {
-        // Получаем размер плитки на карте
+        if (myRobot == null || robotMap == null || tileManager == null) {
+            // Обработка случая, когда переданный объект равен null
+            throw new IllegalArgumentException("One or more arguments are null");
+        }
+
         int tileSize = robotMap.getTileSize();
-        // Получаем карту с плитками
         int[][] map = tileManager.getMap();
-        // Определяем столбец и строку, в которых находится робот
         int col = myRobot.getxPosition() / tileSize;
         int row = myRobot.getyPosition() / tileSize;
-        // Определяем следующий столбец и строку в зависимости от выбранного направления
-        int nextCol = col;
-        int nextRow = row;
+
+        // Проверка допустимости направления
         switch (direction) {
             case "left":
-                nextCol--;
-                break;
             case "right":
-                nextCol++;
-                break;
             case "up":
-                nextRow--;
-                break;
             case "down":
-                nextRow++;
                 break;
             default:
-                // Если направление неизвестно, считаем его свободным
-                return true;
+                throw new IllegalArgumentException("Invalid direction: " + direction);
         }
-        // Проверяем, выходит ли следующая позиция за границы карты
+
+        int nextCol = col;
+        int nextRow = row;
+
+        // Проверка на допустимость размера карты и позиции робота
+        if ("left".equals(direction)) {
+            nextCol--;
+        } else if ("right".equals(direction)) {
+            nextCol++;
+        } else if ("up".equals(direction)) {
+            nextRow--;
+        } else if ("down".equals(direction)) {
+            nextRow++;
+        }
+
         if (nextCol < 0 || nextCol >= robotMap.getCountTileInCol() || nextRow < 0 || nextRow >= robotMap.getCountTileInRow()) {
-            return false; // Следующая позиция за границами карты, направление недоступно
+            return false;
         }
-        // Проверяем, доступна ли следующая позиция для перемещения (не является ли плитка препятствием)
-        return !tileManager.getTiles()[map[nextCol][nextRow]].collision;
+
+        try {
+            // Обработка исключительных ситуаций при доступе к массивам
+            return !tileManager.getTiles()[map[nextCol][nextRow]].collision;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // Обработка выхода за границы массива
+            return false;
+        }
     }
 }

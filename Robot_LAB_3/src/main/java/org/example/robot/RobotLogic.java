@@ -49,35 +49,40 @@ public class RobotLogic {
      * Проверяет, свободно ли направление движения, и изменяет позицию робота.
      */
     public void robotMoveWithKey() {
-        // Проверяем, какая клавиша нажата, и устанавливаем соответствующее направление движения
-        if (keyListener.isLeft) {
-            direction = myRobot.moveLeft();
-        } else if (keyListener.isRight) {
-            direction = myRobot.moveRight();
-        } else if (keyListener.isDown) {
-            direction = myRobot.moveDown();
-        } else if (keyListener.isUp) {
-            direction = myRobot.moveUp();
-        } else {
-            direction = myRobot.moveWait();
-        }
+        try {
+            // Проверяем, какая клавиша нажата, и устанавливаем соответствующее направление движения
+            if (keyListener.isLeft) {
+                direction = myRobot.moveLeft();
+            } else if (keyListener.isRight) {
+                direction = myRobot.moveRight();
+            } else if (keyListener.isDown) {
+                direction = myRobot.moveDown();
+            } else if (keyListener.isUp) {
+                direction = myRobot.moveUp();
+            } else {
+                direction = myRobot.moveWait();
+            }
 
-        // Проверяем, свободно ли направление движения, используя объект collisionChecker
-        if (!collisionChecker.isFreeDirection(myRobot, robotMap, tileManager, direction)) {
-            myRobot.collision = true; // Если направление занято, устанавливаем флаг коллизии
-            return;
-        }
+            // Проверяем, свободно ли направление движения, используя объект collisionChecker
+            if (!collisionChecker.isFreeDirection(myRobot, robotMap, tileManager, direction)) {
+                myRobot.collision = true; // Если направление занято, устанавливаем флаг коллизии
+                return;
+            }
 
-        myRobot.collision = false; // Сбрасываем флаг коллизии
-        // Изменяем позицию робота в соответствии с направлением движения
-        if (keyListener.isLeft) {
-            myRobot.setxPosition(myRobot.getxPosition() - myRobot.getSpeedRobot());
-        } else if (keyListener.isRight) {
-            myRobot.setxPosition(myRobot.getxPosition() + myRobot.getSpeedRobot());
-        } else if (keyListener.isDown) {
-            myRobot.setyPosition(myRobot.getyPosition() + myRobot.getSpeedRobot());
-        } else if (keyListener.isUp) {
-            myRobot.setyPosition(myRobot.getyPosition() - myRobot.getSpeedRobot());
+            myRobot.collision = false; // Сбрасываем флаг коллизии
+            // Изменяем позицию робота в соответствии с направлением движения
+            if (keyListener.isLeft) {
+                myRobot.setxPosition(myRobot.getxPosition() - myRobot.getSpeedRobot());
+            } else if (keyListener.isRight) {
+                myRobot.setxPosition(myRobot.getxPosition() + myRobot.getSpeedRobot());
+            } else if (keyListener.isDown) {
+                myRobot.setyPosition(myRobot.getyPosition() + myRobot.getSpeedRobot());
+            } else if (keyListener.isUp) {
+                myRobot.setyPosition(myRobot.getyPosition() - myRobot.getSpeedRobot());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -86,30 +91,35 @@ public class RobotLogic {
      * Поиск пути выполняется с использованием алгоритма поиска в глубину.
      */
     public void robotMove() {
-        pathX = new ArrayList<>();
-        pathY = new ArrayList<>();
-        boolean[][] visited = new boolean[robotMap.getCountTileInCol()][robotMap.getCountTileInRow()];
-        // Находим координаты цели на карте
-        int[] cord = tileManager.findCoordinateOfValue(maze, 2);
-        // Вызываем метод поиска пути
-        flag = findPath(tileManager.getMap(), myRobot.getxPosition() / robotMap.getTileSize(),
-                myRobot.getyPosition() / robotMap.getTileSize(), cord[0], cord[1], visited, pathX, pathY);
-        Collections.reverse(pathX); // Разворачиваем список координат X пути
-        Collections.reverse(pathY); // Разворачиваем список координат Y пути
-        if (flag) {
-            // Перемещаем робота по найденному пути
-            for (int i = 0; i < pathX.size(); i++) {
-                myRobot.setxPosition(pathX.get(i) * robotMap.getTileSize());
-                myRobot.setyPosition(pathY.get(i) * robotMap.getTileSize());
-                robotPanel.repaint(); // Перерисовываем панель с роботом
-                try {
-                    Thread.sleep(100); // Задержка для визуализации перемещения робота
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        try {
+            pathX = new ArrayList<>();
+            pathY = new ArrayList<>();
+            boolean[][] visited = new boolean[robotMap.getCountTileInCol()][robotMap.getCountTileInRow()];
+            // Находим координаты цели на карте
+            int[] cord = tileManager.findCoordinateOfValue(maze, 2);
+            // Вызываем метод поиска пути
+            flag = findPath(tileManager.getMap(), myRobot.getxPosition() / robotMap.getTileSize(),
+                    myRobot.getyPosition() / robotMap.getTileSize(), cord[0], cord[1], visited, pathX, pathY);
+            Collections.reverse(pathX); // Разворачиваем список координат X пути
+            Collections.reverse(pathY); // Разворачиваем список координат Y пути
+            if (flag) {
+                // Перемещаем робота по найденному пути
+                for (int i = 0; i < pathX.size(); i++) {
+                    myRobot.setxPosition(pathX.get(i) * robotMap.getTileSize());
+                    myRobot.setyPosition(pathY.get(i) * robotMap.getTileSize());
+                    robotPanel.repaint(); // Перерисовываем панель с роботом
+                    try {
+                        Thread.sleep(100); // Задержка для визуализации перемещения робота
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            finish = true;
         }
-        finish = true; // Устанавливаем флаг завершения поиска пути
+        catch (Exception e) {
+            e.printStackTrace();
+        }// Устанавливаем флаг завершения поиска пути
     }
 
     /**
@@ -125,31 +135,34 @@ public class RobotLogic {
      * @return true, если путь найден, иначе false
      */
     boolean findPath(int[][] maze, int startX, int startY, int endX, int endY, boolean[][] visited, List<Integer> pathX, List<Integer> pathY) {
-        if (startX == endX && startY == endY) {
-            pathX.add(startX);
-            pathY.add(startY);
-            flag = true;
-            return true;
-        }
+        try {
+            if (startX == endX && startY == endY) {
+                pathX.add(startX);
+                pathY.add(startY);
+                flag = true;
+                return true;
+            }
 
-        visited[startX][startY] = true;
-        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        for (int[] dir : directions) {
-            int newX = startX + dir[0];
-            int newY = startY + dir[1];
-            if (isValid(maze, newX, newY, visited)) {
-                if (findPath(maze, newX, newY, endX, endY, visited, pathX, pathY)) {
-                    pathX.add(startX);
-                    pathY.add(startY);
-                    return true;
-                } else {
-                    visited[newX][newY] = false;
+            visited[startX][startY] = true;
+            int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+            for (int[] dir : directions) {
+                int newX = startX + dir[0];
+                int newY = startY + dir[1];
+                if (isValid(maze, newX, newY, visited)) {
+                    if (findPath(maze, newX, newY, endX, endY, visited, pathX, pathY)) {
+                        pathX.add(startX);
+                        pathY.add(startY);
+                        return true;
+                    } else {
+                        visited[newX][newY] = false;
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
-
     /**
      * Метод isValid проверяет, является ли клетка с координатами (x, y) допустимой для перемещения.
      * @param maze карта лабиринта

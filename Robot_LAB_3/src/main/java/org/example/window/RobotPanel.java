@@ -6,6 +6,8 @@ import org.example.utils.MyKeyListener;
 import javax.swing.*;
 import java.awt.*;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class RobotPanel extends JPanel implements Runnable {
     private volatile Thread robotThread;
     private final int TARGET_FPS = 30;
     private final long FRAME_INTERVAL = 1000 / TARGET_FPS;
+    private boolean movementAllowed = false;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private boolean robotCoordinatesSet = false;
     public RobotPanel() {
@@ -32,6 +35,8 @@ public class RobotPanel extends JPanel implements Runnable {
         this.myKeyListener = new MyKeyListener();
         robotLogic = new RobotLogic( myRobot, robotMap,myKeyListener, collisionChecker, tileManager,this);
         MyMouseListener mouseListener = new MyMouseListener();
+        KeyRest keyRest = new KeyRest();
+        this.addKeyListener(keyRest);
         this.addMouseListener(mouseListener);
         flag = robotLogic.finish;
         initRobotPanel();
@@ -54,6 +59,17 @@ public class RobotPanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(myKeyListener);
         this.setFocusable(true);
+    }
+    public void resetRobotPosition() {
+        // Сброс позиции робота
+        myRobot.setxPosition(0);
+        myRobot.setyPosition(0);
+        robotCoordinatesSet = false;
+        movementAllowed = false; // Запрет на движение робота
+        if (robotThread != null && robotThread.isAlive()) {
+            stopThread(); // Остановка потока, если он был запущен
+        }
+        repaint(); // Перерисовать панель после сброса позиции робота
     }
     @Override
     protected void paintComponent(Graphics g) {
@@ -92,8 +108,10 @@ public class RobotPanel extends JPanel implements Runnable {
         }
     }
     private void updateAndRepaint() {
-        update();
-        repaint();
+        if (movementAllowed) { // Добавляем проверку movementAllowed
+            update();
+            repaint();
+        }
         if (!flag) {
             stopThread();
         }
@@ -113,14 +131,26 @@ public class RobotPanel extends JPanel implements Runnable {
                 int mouseY = e.getY();
                 tileX = mouseX / robotMap.getTileSize();
                 tileY = mouseY / robotMap.getTileSize();
-                if(!tileManager.checkCoordinateOfValue(tileManager.getMap(), 1, tileX, tileY)) {
+                if (!tileManager.checkCoordinateOfValue(tileManager.getMap(), 1, tileX, tileY)) {
                     myRobot.setxPosition(tileX * robotMap.getTileSize());
                     myRobot.setyPosition(tileY * robotMap.getTileSize());
                     repaint();
                     robotCoordinatesSet = true;
+                    movementAllowed = true; // Разрешение на движение робота
                     startThread();
                 }
             }
         }
     }
+    class KeyRest extends KeyAdapter {
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // Обработка нажатия клавиши R для сброса позиции робота
+            if (e.getKeyChar() == 'r' || e.getKeyChar() == 'R') {
+                resetRobotPosition();
+            }
+        }
+    }
 }
+

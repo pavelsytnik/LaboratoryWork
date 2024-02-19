@@ -1,9 +1,12 @@
 package org.example.utils;
 
+import org.example.window.RobotPanel;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class MyKeyListener implements KeyListener {
+public class MyKeyListener implements KeyListener {// Добавляем ссылку на панель робота
+
     public boolean isUp,isDown,isRight,isLeft;
     @Override
     public void keyTyped(KeyEvent e) {
@@ -12,6 +15,7 @@ public class MyKeyListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+
         if(code==KeyEvent.VK_D){
             isRight = true;
         }
