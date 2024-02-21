@@ -1,6 +1,6 @@
 package psd.node;
 
-public class LabelNode implements Node {
+public class LabelNode implements NodeWithOnlyChild {
 
     private Node nextNode;
     private final int index;
@@ -9,10 +9,12 @@ public class LabelNode implements Node {
         this.index = index;
     }
 
+    @Override
     public Node getNextNode() {
         return nextNode;
     }
 
+    @Override
     public void setNextNode(Node nextNode) {
         this.nextNode = nextNode;
     }
