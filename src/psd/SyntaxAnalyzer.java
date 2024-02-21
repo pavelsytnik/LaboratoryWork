@@ -49,25 +49,16 @@ public class SyntaxAnalyzer {
                 default -> throw new RuntimeException("Syntax Error: Unknown token");
             }
             if (currentNode != null) {
-                if (currentNode instanceof StartNode sn) {
+                if (currentNode instanceof NodeWithOnlyChild n) {
                     if (currentToken.getType().equals("#"))
                         throw new RuntimeException("Syntax Error: '#' is forbidden here");
-                    sn.setNextNode(nextNode);
-                } else if (currentNode instanceof LabelNode ln) {
-                    if (currentToken.getType().equals("#"))
-                        throw new RuntimeException("Syntax Error: '#' is forbidden here");
-                    ln.setNextNode(nextNode);
-                } else if (currentNode instanceof CommandNode cn) {
-                    if (currentToken.getType().equals("#"))
-                        throw new RuntimeException("Syntax Error: '#' is forbidden here");
-                    cn.setNextNode(nextNode);
+                    n.setNextNode(nextNode);
                 } else if (currentNode instanceof ConditionNode cn) {
                     if (cn.getFalseNode() == null) {
                         if (!currentToken.getType().equals("#"))
                             throw new RuntimeException("Syntax Error: '#' was expected");
                         cn.setFalseNode((LabelNode) nextNode);
-                    }
-                    else {
+                    } else {
                         if (currentToken.getType().equals("#"))
                             throw new RuntimeException("Syntax Error: '#' is forbidden here");
                         cn.setTrueNode(nextNode);
