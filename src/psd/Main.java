@@ -10,7 +10,7 @@ import psd.token.Token;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        var fr = new FileReader("..."); // Enter file name
+        var fr = new FileReader("example_input_file.txt");
         var parser = new Parser(fr);
 
         var token = parser.nextToken();
